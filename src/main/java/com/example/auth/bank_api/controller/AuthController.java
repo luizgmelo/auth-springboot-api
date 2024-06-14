@@ -1,9 +1,8 @@
 package com.example.auth.bank_api.controller;
 
+import com.example.auth.bank_api.dtos.RegisterRecordDTO;
 import com.example.auth.bank_api.dtos.UserRecordDTO;
-import com.example.auth.bank_api.models.UserModel;
-import com.example.auth.bank_api.repositories.UserRepository;
-import com.example.auth.bank_api.services.UserService;
+import com.example.auth.bank_api.services.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,7 +14,9 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     @Autowired
-    UserService userService;
+    AuthService userService;
+    @Autowired
+    private AuthService authService;
 
     @GetMapping
     public ResponseEntity ok() {
@@ -23,13 +24,12 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody @Valid UserRecordDTO userRecordDTO) {
-        userService.register(userRecordDTO);
-        return ResponseEntity.status(HttpStatus.OK).body("Register user successfully!");
+    public ResponseEntity<String> registerUser(@RequestBody @Valid RegisterRecordDTO registerRecordDTO) {
+        return ResponseEntity.status(HttpStatus.OK).body(authService.register(registerRecordDTO));
     }
 
-    // <TO-DO> Login
-//    @PostMapping("/login")
-//    public ResponseEntity<String> loginUser(@RequestBody @Valid UserRecordDTO userRecordDTO) {
-//
+    @PostMapping("/login")
+    public ResponseEntity<String> loginUser(@RequestBody @Valid UserRecordDTO userRecordDTO) {
+        return ResponseEntity.status(HttpStatus.OK).body(authService.login(userRecordDTO));
+    }
 }
